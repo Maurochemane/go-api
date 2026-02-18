@@ -8,21 +8,39 @@ import(
 
 type productController struct {
 	//usecase
+	productUsecase usecase.ProductUsecase
 }
 
-func NewProductController(){
-	return productController
+func NewProductController(usecase usecase.ProductUsecase ) productController{
+	return productController{
+		productUsecase: usecase,
+	}
 }
 
 func (p *productController) GetProducts(ctx *gin.Contex){
 
-	products := []model.product{
-		{
-			ID: 1,
-			Name: "Nanami",
-			Price: 200,
-		}
+	products, err := p.productUsecase.GetProducts()
+	if err != nil{
+		ctx.JSON(http.StatusInternalServerError, err)
 	}
 
 	ctx.JSON(http.StatusOk, products)
+}
+
+func (p * productController) CreateProduct(ctx.Contex){
+
+	var product model.product
+	err := ctx.BindJSON(&product)
+	if err != nil{
+		ctx.JSON(http.StatusBadRequest, err)
+		return
+	}
+
+	insertedProduct, err := p.productCase.CreateProduct(product)
+	if err != nil{
+		ctx.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	ctx.json(http.StatusCreated, insertedProduct)
 }

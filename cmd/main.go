@@ -6,8 +6,28 @@ func main(){
 
 	server := gin.Default()
 
+	//conect database
+	dbConnection, err := db.ConnectDB()
+	if err != nil{
+		panic(err)
+	}
+
+
+	//camada de repository
+	ProductRepository := repository.NewProductRepository(dbConnection)
+
+
+	// camada usecase
+	ProductUsecase := usecase.NewProductUsecase(ProductRepository)
+
+
 	//camada de controllers
-	productController := controller.NewProductController()
+	productController := controller.NewProductController(ProductUsecase)
+
+
+
+
+
 
 	server.GET("/ping", func (ctx *gin.Contex){
 		ctx.JSON(200, gin.H){
@@ -15,7 +35,9 @@ func main(){
 		}
 	})
 
+
 	server.GET("/products", productController.GetProducts)
+	server.POST("/product", productController.CreateProduct)
 
 	server.Run(":5000")
 }

@@ -1,9 +1,13 @@
 
 
-
+# instalar bibliotecas
+go mod tidy
 
 # Lib Http
 go get github.com/gin-gonic/gin 
+
+# Lib Postgres
+_ "github.com/lib/pq"
 
 # Testando a lib
 
