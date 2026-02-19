@@ -44,3 +44,7 @@ func main(){
 
 	ctx.JSON(http.StatusOk, products)
 }`
+
+# Build da imagem
+
+docker build -t go-api .

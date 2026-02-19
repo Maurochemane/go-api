@@ -39,6 +39,10 @@ func main(){
 	server.GET("/products", productController.GetProducts)
 	server.POST("/product", productController.CreateProduct)
 	server.Get("/product/:productId", productController.GetProductById)
+	//PUT
+	//DELETE
+
+	//JWt auth
 
 	server.Run(":5000")
 }
