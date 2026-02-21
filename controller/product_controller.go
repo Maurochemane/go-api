@@ -1,8 +1,11 @@
 package controller
 
-import(
+import (
 	"go-api/model"
+	"go-api/usecase"
 	"net/http"
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,42 +20,43 @@ func NewProductController(usecase usecase.ProductUsecase ) productController{
 	}
 }
 
-func (p *productController) GetProducts(ctx *gin.Contex){
+func (p *productController) GetProducts(ctx *gin.Context){
 
 	products, err := p.productUsecase.GetProducts()
 	if err != nil{
 		ctx.JSON(http.StatusInternalServerError, err)
+		return
 	}
 
-	ctx.JSON(http.StatusOk, products)
+	ctx.JSON(http.StatusOK, products)
 }
 
-func (p * productController) CreateProduct(ctx.Contex){
+func (p * productController) CreateProduct(ctx *gin.Context){
 
-	var product model.product
+	var product model.Product
 	err := ctx.BindJSON(&product)
 	if err != nil{
 		ctx.JSON(http.StatusBadRequest, err)
 		return
 	}
 
-	insertedProduct, err := p.productCase.CreateProduct(product)
+	insertedProduct, err := p.productUsecase.CreateProduct(product)
 	if err != nil{
 		ctx.JSON(http.StatusInternalServerError, err)
 		return
 	}
 
-	ctx.json(http.StatusCreated, insertedProduct)
+	ctx.JSON(http.StatusCreated, insertedProduct)
 }
 
-func (p *productController) GetProductById(ctx *gin.Contex){
+func (p *productController) GetProductById(ctx *gin.Context){
 
 	id := ctx.Param("productId")
 	if (id == ""){
 		response := model.Response{
 			Message:"Id do producto nao pode ser nulo",
 		}
-		ctx.json(http.StatusBadRequest, )
+		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
 
@@ -62,7 +66,7 @@ func (p *productController) GetProductById(ctx *gin.Contex){
 		response := model.Response{
 			Message:"Id do produto precisa ser um numero",
 		}
-		ctx.json(http.StatusBadRequest, )
+		ctx.JSON(http.StatusBadRequest, response)
 		return
 	}
 
@@ -77,9 +81,9 @@ func (p *productController) GetProductById(ctx *gin.Contex){
 		response := model.Response{
 			Message:"O producto nao foi encontrado na base de dados",
 		}
-		ctx.json(http.StatusNotFound,response )
+		ctx.JSON(http.StatusNotFound, response)
 		return
 	}
 
-	ctx.JSON(http.StatusOk, product)
+	ctx.JSON(http.StatusOK, product)
 }

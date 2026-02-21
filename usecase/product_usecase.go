@@ -1,5 +1,10 @@
 package usecase
 
+import (
+	"go-api/model"
+	"go-api/repository"
+)
+
 
 type ProductUsecase struct {
 	//repository
@@ -7,9 +12,9 @@ type ProductUsecase struct {
 }
 
 
-func NewProductUsecase() ProductUsecase{
+func NewProductUsecase(repo repository.ProductRepository) ProductUsecase{
 	return ProductUsecase{
-		repository: repo
+		repository: repo,
 	}
 }
 
@@ -17,7 +22,7 @@ func ( pu *ProductUsecase) GetProducts() ([]model.Product, error){
 	return pu.repository.GetProducts()
 }
 
-func(pu *ProductUsecase) CreateProduct(product model.product) (model.product, err){
+func(pu *ProductUsecase) CreateProduct(product model.Product) (model.Product, error){
 
 	productId, err := pu.repository.CreateProduct(product)
 	if err != nil {
@@ -28,10 +33,10 @@ func(pu *ProductUsecase) CreateProduct(product model.product) (model.product, er
 	return product, nil
 }
 
-func (pu *ProductUsecase) GetProductById(id_product int) (*model.product,error){
+func (pu *ProductUsecase) GetProductById(id_product int) (*model.Product,error){
 
 	product, err := pu.repository.GetProductById(id_product)
-	if err != {
+	if (err != nil){
 		return nil, err
 	}
 

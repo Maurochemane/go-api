@@ -1,6 +1,12 @@
 package main 
 
-import "github.com/gin-gonic/gin"
+import ("github.com/gin-gonic/gin"
+	"go-api/controller"
+	"go-api/repository"
+	"go-api/usecase"
+	"go-api/db"
+)
+
 
 func main(){
 
@@ -29,16 +35,15 @@ func main(){
 
 
 
-	server.GET("/ping", func (ctx *gin.Contex){
-		ctx.JSON(200, gin.H){
-			"message":"yes here we go again"
-		}
-	})
+	// server.GET("/ping", func (ctx *gin.Contex){
+	// 	ctx.JSON(200, gin.H){
+	// 		"message":"yes here we go again"}
+	// })
 
 
 	server.GET("/products", productController.GetProducts)
 	server.POST("/product", productController.CreateProduct)
-	server.Get("/product/:productId", productController.GetProductById)
+	server.GET("/product/:productId", productController.GetProductById)
 	//PUT
 	//DELETE
 
