@@ -1,11 +1,17 @@
+
 FROM golang:1.25
 
+# set working directory
 WORKDIR /go/src/app
 
+# Copy the source code
 COPY . . 
 
-EXPOSE 5000
+#EXPOSE the port
+EXPOSE 8000
 
+# Build the Go app
 RUN go build -o main cmd/main.go
 
-CMD [ "./main" ]
+# Run the executable
+CMD ["./main"]

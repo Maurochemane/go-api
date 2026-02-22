@@ -1,9 +1,17 @@
-Version: "3.9"
+version: "3.9"
 
 services:
+  go-app:
+    container_name: go-app
+    image: go-api-image
+    build: .
+    ports:
+      - "5000:5000"
+    depends_on:
+      - go_db
   go_db:
     container_name: go_db
-    image: postgres:15-alpine
+    image: postgres:12
     environment:
       POSTGRES_PASSWORD: 0220
       POSTGRES_USER: postgres

@@ -58,7 +58,7 @@ func (pr *ProductRepository) CreateProduct(product model.Product) (int, error) {
 		return 0, err
 	}
 
-	err = query.QueryRoe(product.Name, product.Price).Scan(&id)
+	err = query.QueryRow(product.Name, product.Price).Scan(&id)
 
 	if err != nil {
 		fmt.Println(err)
