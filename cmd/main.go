@@ -1,21 +1,29 @@
-package main 
+package main
 
-import ("github.com/gin-gonic/gin"
+import (
+	"fmt"
 	"go-api/controller"
+	"go-api/db"
 	"go-api/repository"
 	"go-api/usecase"
-	"go-api/db"
+
+	"github.com/gin-gonic/gin"
 )
 
 
 func main(){
+
+	var texto string= "Nao foi possivel conectar com o banco de dados"
+	fmt.Printf(texto)
 
 	server := gin.Default()
 
 	//conect database
 	dbConnection, err := db.ConnectDB()
 	if err != nil{
+		
 		panic(err)
+		
 	}
 
 
