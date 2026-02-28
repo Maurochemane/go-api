@@ -25,7 +25,7 @@
 
 
 #Step 1: Baixar e compilar o binário
-FROM golang:1.20-alpine as stage1
+FROM golang:1.25 as stage1
 
 
 WORKDIR /app
@@ -36,8 +36,9 @@ RUN go mod download
 
 # Copia o codigo da aplicação e compila o binário
 COPY . .
-EXPOSE 8000
-RUN CGO_ENABLED=0 GOOS=linux go build -o executable
+
+
+RUN CGO_ENABLED=0 GOOS=linux go build -o executable ./cmd
 
 ####stage 2 
 
@@ -46,7 +47,9 @@ FROM  scratch
 
 # Copia apenas o binário.
 COPY --from=stage1 /app/executable /
+EXPOSE 8000
 
 # Define o ponto de entrada para o container como /executavel.
 # O binário será executado quando o container for iniciado.
 ENTRYPOINT [ "/executable" ]
+

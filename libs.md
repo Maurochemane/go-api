@@ -48,3 +48,38 @@ func main(){
 # Build da imagem
 
 docker build -t go-api .
+
+# Features 
+
+dockerfile com certificados ssl
+
+# --- Stage 1: Build ---
+FROM golang:1.20-alpine AS stage1
+
+# Instala certificados CA para permitir conexões HTTPS externas
+RUN apk add --no-cache ca-certificates
+
+WORKDIR /app
+
+# Cache de dependências (otimiza o tempo de build)
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Copia o código e compila
+COPY . .
+RUN CGO_ENABLED=0 GOOS=linux go build -o /executable
+
+# --- Stage 2: Final (Imagem de Produção) ---
+FROM scratch
+
+# Copia os certificados SSL/TLS do stage 1
+COPY --from=stage1 /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+
+# Copia apenas o binário compilado
+COPY --from=stage1 /executable /executable
+
+# Porta que a aplicação utiliza
+EXPOSE 8000
+
+# Execução do binário
+ENTRYPOINT [ "/executable" ]

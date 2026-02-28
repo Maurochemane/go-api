@@ -54,6 +54,13 @@ func ConnectDB() (*sql.DB, error) {
 		err = db.Ping()
 		if err == nil {
 			fmt.Println("Connected to " + dbname)
+
+			// Executar migrações automaticamente
+			if err := RunMigrations(db); err != nil {
+				fmt.Printf("Erro ao rodar migrações: %v\n", err)
+				return nil, err
+			}
+
 			return db, nil
 		}
 
